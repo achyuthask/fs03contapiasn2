@@ -1,24 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+
+import { Route, Routes } from 'react-router-dom';
+import { useState } from 'react';
+import { CartContext } from './components/store/contex';
+import Home from './components/home';
+import Product from './components/product';
+import Addcart from './components/addcard';
+import Nav from './components/nav';
+
 
 function App() {
+  const [cart, setCart] = useState([]);
+
+  function addToCart(product) {
+    setCart([...cart, product]);
+  }
+  const handleDelete = (productId) => {
+    const newCart = cart.filter(product => product.id !== productId);
+    setCart(newCart);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+<CartContext.Provider value={{ cart, addToCart , handleDelete}}>
+    <Nav />
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/product' element={<Product />} />
+        <Route path='/addcart' element ={<Addcart cart={cart} />}  />
+       </Routes>
+
+
+    </CartContext.Provider>
+     
+   
+
     </div>
+    
   );
 }
 
